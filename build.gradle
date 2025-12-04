@@ -31,8 +31,24 @@ dependencies {
     implementation 'jakarta.validation:jakarta.validation-api:3.0.2'
     implementation 'org.hibernate.validator:hibernate-validator:8.0.1.Final'
     implementation 'org.glassfish.expressly:expressly:5.0.0'
+    implementation 'org.eclipse.jetty:jetty-server:11.0.18'
+    implementation 'org.eclipse.jetty:jetty-servlet:11.0.18'
 }
 
 test {
     useJUnitPlatform()
+}
+
+task runServer(type: JavaExec) {
+    group = 'application'
+    description = 'Runs the REST API web server'
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'ua.onlinecourses.servlet.WebServer'
+}
+
+task runClient(type: JavaExec) {
+    group = 'application'
+    description = 'Runs the REST API client demo'
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'ua.onlinecourses.servlet.RestApiClient'
 }
