@@ -119,7 +119,9 @@ public class ModuleServlet extends BaseServlet {
             if (repository.removeByIdentity(id)) {
                 RepositoryManager.getInstance().saveModulesToFile();
                 logger.log(Level.INFO, "DELETE removed module: {0}", id);
-                sendJsonResponse(response, HttpServletResponse.SC_OK, "{\"message\": \"Module deleted\"}");
+                java.util.Map<String, String> result = new java.util.HashMap<>();
+                result.put("message", "Module deleted");
+                sendJsonResponse(response, HttpServletResponse.SC_OK, result);
             } else {
                 logger.log(Level.WARNING, "DELETE failed - module not found: {0}", id);
                 sendErrorResponse(response, HttpServletResponse.SC_NOT_FOUND, "Module not found: " + id);

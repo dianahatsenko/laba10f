@@ -124,7 +124,9 @@ public class StudentServlet extends BaseServlet {
             if (repository.removeByIdentity(id)) {
                 RepositoryManager.getInstance().saveStudentsToFile();
                 logger.log(Level.INFO, "DELETE removed student: {0}", id);
-                sendJsonResponse(response, HttpServletResponse.SC_OK, "{\"message\": \"Student deleted\"}");
+                java.util.Map<String, String> result = new java.util.HashMap<>();
+                result.put("message", "Student deleted");
+                sendJsonResponse(response, HttpServletResponse.SC_OK, result);
             } else {
                 logger.log(Level.WARNING, "DELETE failed - student not found: {0}", id);
                 sendErrorResponse(response, HttpServletResponse.SC_NOT_FOUND, "Student not found: " + id);

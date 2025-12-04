@@ -56,7 +56,7 @@ public class InstructorServlet extends BaseServlet {
             Instructor instructor = new Instructor(
                     dto.firstName,
                     dto.lastName,
-                    dto.expertise
+                    dto.expertise != null ? dto.expertise : 1
             );
 
             if (repository.add(instructor)) {
@@ -99,7 +99,7 @@ public class InstructorServlet extends BaseServlet {
             Instructor updated = new Instructor(
                     dto.firstName != null ? dto.firstName : existing.get().firstName(),
                     dto.lastName != null ? dto.lastName : existing.get().lastName(),
-                    dto.expertise > 0 ? dto.expertise : existing.get().expertise()
+                    dto.expertise != null ? dto.expertise : existing.get().expertise()
             );
 
             repository.add(updated);
@@ -125,7 +125,9 @@ public class InstructorServlet extends BaseServlet {
             if (repository.removeByIdentity(id)) {
                 RepositoryManager.getInstance().saveInstructorsToFile();
                 logger.log(Level.INFO, "DELETE removed instructor: {0}", id);
-                sendJsonResponse(response, HttpServletResponse.SC_OK, "{\"message\": \"Instructor deleted\"}");
+                java.util.Map<String, String> result = new java.util.HashMap<>();
+                result.put("message", "Instructor deleted");
+                sendJsonResponse(response, HttpServletResponse.SC_OK, result);
             } else {
                 logger.log(Level.WARNING, "DELETE failed - instructor not found: {0}", id);
                 sendErrorResponse(response, HttpServletResponse.SC_NOT_FOUND, "Instructor not found: " + id);
@@ -139,6 +141,6 @@ public class InstructorServlet extends BaseServlet {
     public static class InstructorDTO {
         public String firstName;
         public String lastName;
-        public int expertise;
+        public Integer expertise;
     }
 }

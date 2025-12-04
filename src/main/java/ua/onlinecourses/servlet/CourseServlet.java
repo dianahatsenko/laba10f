@@ -57,7 +57,7 @@ public class CourseServlet extends BaseServlet {
             Course course = new Course(
                     dto.title,
                     dto.description,
-                    dto.credits,
+                    dto.credits != null ? dto.credits : 1,
                     dto.startDate != null ? LocalDate.parse(dto.startDate) : LocalDate.now().plusMonths(1)
             );
 
@@ -98,7 +98,7 @@ public class CourseServlet extends BaseServlet {
             Course updated = new Course(
                     dto.title != null ? dto.title : existing.get().title(),
                     dto.description != null ? dto.description : existing.get().description(),
-                    dto.credits > 0 ? dto.credits : existing.get().credits(),
+                    dto.credits != null ? dto.credits : existing.get().credits(),
                     dto.startDate != null ? LocalDate.parse(dto.startDate) : existing.get().startDate()
             );
 
@@ -124,7 +124,9 @@ public class CourseServlet extends BaseServlet {
             if (repository.removeByIdentity(id)) {
                 RepositoryManager.getInstance().saveCoursesToFile();
                 logger.log(Level.INFO, "DELETE removed course: {0}", id);
-                sendJsonResponse(response, HttpServletResponse.SC_OK, "{\"message\": \"Course deleted\"}");
+                java.util.Map<String, String> result = new java.util.HashMap<>();
+                result.put("message", "Course deleted");
+                sendJsonResponse(response, HttpServletResponse.SC_OK, result);
             } else {
                 logger.log(Level.WARNING, "DELETE failed - course not found: {0}", id);
                 sendErrorResponse(response, HttpServletResponse.SC_NOT_FOUND, "Course not found: " + id);
@@ -138,7 +140,7 @@ public class CourseServlet extends BaseServlet {
     public static class CourseDTO {
         public String title;
         public String description;
-        public int credits;
+        public Integer credits;
         public String startDate;
     }
 }

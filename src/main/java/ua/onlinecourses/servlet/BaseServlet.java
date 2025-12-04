@@ -69,7 +69,9 @@ public abstract class BaseServlet extends HttpServlet {
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         PrintWriter writer = response.getWriter();
-        writer.write("{\"error\": \"" + message.replace("\"", "\\\"") + "\"}");
+        java.util.Map<String, String> errorMap = new java.util.HashMap<>();
+        errorMap.put("error", message);
+        objectMapper.writeValue(writer, errorMap);
     }
 
     protected String readRequestBody(HttpServletRequest request) throws IOException {
